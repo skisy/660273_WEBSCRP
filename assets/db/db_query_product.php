@@ -1,7 +1,7 @@
 <?php
 	header("Content-Type: application/json");
-	$i = 0;
-	$conn = new mysqli("localhost", "root", "", "shopdb");
+
+	include ("db_connect.php");
 
 	if(isset($_GET['product'])) {
 		$prod = preg_replace('#[^0-9]#', '', $_GET['product']);
@@ -28,16 +28,17 @@
 
 	$jsonData = "";
 
+	//$i = 0;
+
 	while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
-		$i++;
+		//$i++;
 		$id = $row["p_id"]; 
 		$name = $row["p_name"];
 		$description = $row["p_long_desc"];
 		$price = $row["p_price"];
 		$quantity = $row["p_stock_quantity"];
-		$photo = $row["p_photo_url"];
 		$meta = $row['p_meta'];
-		$jsonData .= '{"id":"'.$id.'","name":"'.$name.'","price":"'.$price.'","quantity":"'.$quantity.'","photo":"'.$photo.'","description":"'.$description.'","meta":"test"}';
+		$jsonData .= '{"id":"'.$id.'","name":"'.$name.'","price":"'.$price.'","quantity":"'.$quantity.'","description":"'.$description.'","meta":"test"}';
 	}
 	
 	$stmt->free_result();

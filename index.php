@@ -1,24 +1,19 @@
-<?php
-	if(file_exists('incl/config.ini')):
-		$settings = parse_ini_file('incl/config.ini');
-		include ('db/test_db_conn.php');
-		include ('incl/header.php');
+<?php 	
+	include ("sitePaths.php");
+	$settings = parse_ini_file(INCL_ROOT . "config.ini");
+
+	include (INCL_ROOT . 'header.php');
 ?>
+
+
 	<div class="left-content">
-			<nav id="catNav">
-				&nbsp;
-			</nav>			
+		<nav id="catNav">
+		</nav>			
 	</div>
+
 	<div class="right-content">
-		<div id="products">
-		</div>
+		<div id="breadcrumbs"></div>
+		<div id="products"></div>
 	</div>
-</div>
-	
 		
-<?php
-	include ('incl/footer.php');
-	else:
-		echo "Config file is missing";
-	endif;
-?>
+<?php include ('incl/footer.php'); ?>

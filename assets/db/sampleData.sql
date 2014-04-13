@@ -73,3 +73,9 @@ INSERT INTO product (p_name, p_long_desc, p_price, p_stock_quantity, p_photo_url
  
 INSERT INTO product_category(p_id, cat_id) VALUES
 (1,1),(2,103),(3,44),(4,15),(5,54),(6,7),(8,47),(9,55),(10,46),(11,56),(12,36),(13,2),(14,92),(15,12);
+
+INSERT INTO product_image(p_id, pi_url, pi_main_pic) VALUES
+(1,"ubfastcomp.jpg",1),(2,"cutekitten.jpg",1),(3,"MMM.jpg",1),
+(4,"mast7.jpg",1),(5,"ipid.jpg",1),(6,"pinkcoat.jpg",1),
+(7,"bikelights.jpg", 1),(8,"bigtv.jpg",1),(9,"cable.jpg",1),
+(10,"canon660d.jpg",1),(11,"intelcpu.jpg",1),(12,"foottanner.jpg",1);

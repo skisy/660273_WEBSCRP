@@ -1,5 +1,8 @@
 <?php
-	$settings = parse_ini_file("incl/config.ini");
+	
+	include ("sitePaths.php");
+
+	$settings = parse_ini_file(INCL_ROOT . "config.ini");
 	$_SESSION['user']=$settings['username'];
 	$_SESSION['pass']=$settings['password'];
 	$_SESSION['host']=$settings['host-ip'];

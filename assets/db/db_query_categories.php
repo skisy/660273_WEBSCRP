@@ -1,10 +1,8 @@
 <?php
 	header("Content-Type: application/json");
 
-	$conn = new mysqli("localhost", "root", "", "shopdb");
-	$i = 0;
-	$jsonData = '{';
-	
+	include('db_connect.php');
+
 	if(isset($_GET['category'])) {
 		$cat = preg_replace('#[^0-9]#', '', $_GET['category']);
 	} else {
@@ -42,7 +40,21 @@
 		
 	}
 	
+	$i = 0;
+	$jsonData = '{';
 
+	/*while ($row = $result->fetch_array(MYSQLI_ASSOC)) 
+	{
+		$i++;
+		$jsonData .= '"category' . $i . '":' . json_encode($row) . ',';
+	}
+
+	$stmt->free_result();
+	$jsonData = rtrim($jsonData, ',');
+	$jsonData .= '}';/*
+
+	echo $jsonData;*/
+	
 	while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
 	
 		$i++;

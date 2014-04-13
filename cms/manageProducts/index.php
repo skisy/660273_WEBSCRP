@@ -7,8 +7,7 @@
 ?>
 
 <div class="right-content">
-	<h1>Content Management - Overview</h1>
+	<h1>Manage Products</h1>
 </div>
 
-
-<?php include (INCL_ROOT . 'footer.php');?>
+<?php include (INCL_ROOT . "footer.php"); ?>

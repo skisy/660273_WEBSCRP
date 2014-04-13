@@ -1,87 +1,202 @@
-function ajaxGet (id, queryType, callback) {
+function ajaxHandle (getData, queryType, callback, sendData) {
+	var phpRes,
+	 	getArgument, 
+	 	container,	
+	 	reqMethod, 
+	 	fileString, 
+	 	form, 
+	 	formSubmit,
+	 	updating;
+
+	console.log(queryType);
+
 	switch (queryType) 
 	{
 		case "productDetail":
-			var query = "db_query_product.php";
-			var getArgument = "product";
+			phpRes = "db_query_product.php";
+			getArgument = "product";
+			reqMethod = "GET";
 			break;
 		case "products":
-			var container = document.getElementById("products");
-			var query = "db_query_products.php";
-			var getArgument = "category";
+			container = document.getElementById("products");
+			phpRes = "db_query_products.php";
+			getArgument = "category";
+			reqMethod = "GET";
 			break;
+		case "subCatTree":
 		case "categories":
-			var query = "db_query_categories.php";
-			var getArgument = "category";
+			phpRes = "db_query_categories.php";
+			getArgument = "category";
+			reqMethod = "GET";
+			var id = getData;
+			break;
+		case "allCategories":
+			phpRes = "db_query_all_categories.php";
+			getArgument = "category";
+			reqMethod = "GET";
+			var field = getData["field"];
+			var order = getData["order"];
+			var searchTerm = (getData.hasOwnProperty("searchTerm") ? getData["searchTerm"] : "%");
+			break;
+		case "addCategory":
+			phpRes = "db_add_category.php";
+			formSubmit = true;
+			document.getElementById("catNode0").className = "icon fa fa-folder";
+			document.getElementById("subCatList0").innerHTML = "";
+			break;
+		case "addAttribute":
+			phpRes = "db_add_attribute.php";
+			formSubmit = true;
+			break;
+		case "addItem":
+			phpRes = "db_add_product.php";
+			formSubmit = true;
+			break;
+		case "updateCategory":
+			phpRes = "db_update_category.php";
+			updating = true;
+			break;
+		case "deleteRow":
+			phpRes = "db_delete_row.php";
+			reqMethod = "DELETE";
 			break;
 		default:
 			console.log("Functionality for this query is not built into the ajax query function");
 			break;
 	}
 
+	if (formSubmit)
+	{
+		reqMethod = "POST";
+		form = document.getElementsByTagName("form")[0];
+		container = document.getElementById("submitResult");
+	}
+	else if (updating)
+	{
+		reqMethod = "PATCH";
+	}
+
 	var xhr = new XMLHttpRequest();
+
+	if (reqMethod == "GET")
+	{
+		xhr.addEventListener("progress", updateProgress, false);
+	}
+	else
+	{
+		xhr.upload.addEventListener("loadstart", loadStartHandle, false);
+		xhr.upload.addEventListener("progress", uploadUpdateProgress, false);
+	}
 	
-	xhr.addEventListener("progress", updateProgress, false);
 	xhr.addEventListener("load", contentLoaded, false);
 	xhr.addEventListener("error", contentFail, false);
 
 	function contentLoaded(evt) {
-		//console.log(xhr.responseText);
-		var result = JSON.parse(xhr.responseText);
-		callback(result);
+		console.log(xhr.responseText);
+		var result = xhr.responseText;
+		var jsonResult = JSON.parse(result);
+
+		if (queryType === "subCatTree")
+		{
+			var parent = '{"' + id + '":';
+			jsonResult = JSON.parse(parent.concat(result) + "}");
+		}
+		else if (formSubmit)
+		{
+			var progress = document.getElementById("submitProgress");
+			var msg = document.getElementById("completeMsg");
+			progress.style.width = "100%";
+			progress.style.background = "green";
+			setTimeout(function(evt) { 
+				msg.innerHTML = "Record successfully saved."; 
+				msg.className = "completeMsg"; 
+			}, 1500);
+			setTimeout(function(evt) { container.className = "hideStatus"; },4000);
+			setTimeout(function(evt) {
+				progress.style.width = "";
+				progress.style.background = "";
+				msg.className = "hideStatus";
+				document.getElementById("saveIcon").style.fill = "#cccccc";
+				document.getElementById("formSave").disabled = false;
+			}, 4500);
+			
+			form.reset();
+
+			if (queryType === "addAttribute") { addMoreAttr(); }
+			else if (queryType === "addItem") { /*Remove Image Elements*/ }
+		}
+		
+		callback(jsonResult);
 	}
 
 	function contentFail(evt) {
-		console.log("Content load failed, please try again.");
+		if (formSubmit)
+		{
+			var progress = document.getElementById("submitProgress");
+			progress.style.width = "100%";
+			progress.style.background = "red";
+			progress.innerHTML = "Something went wrong, please try again.";
+			document.getElementById("saveIcon").style.fill = "#cccccc";
+			document.getElementById("formSave").disabled = false;
+		}
+	}
+
+	function uploadUpdateProgress(evt)
+	{
+		console.log(queryType + ": " + Math.round((evt.loaded / evt.total) * 100));
+		var progress = Math.round((evt.loaded / evt.total) * 100);
+
+		if (formSubmit)
+		{
+			var containerWidth = document.getElementById("submitResult").offsetWidth;
+			var progWidth = (progress / containerWidth) * 100;
+			console.log(progWidth);
+			document.getElementById("submitProgress").style.width = progWidth + "px";
+		}
+	}
+
+	function loadStartHandle(evt)
+	{
+		if (formSubmit)
+		{
+			container.className = "showStatus";
+		}	
 	}
 	
 	function updateProgress(evt) {
-		//console.log(queryType + ": " + evt.total);
-		//console.log(queryType + ": " + evt.loaded);
 		console.log(queryType + ": " + Math.round((evt.loaded / evt.total) * 100));
+		var progress = Math.round((evt.loaded / evt.total) * 100);
 	}
 	
 	if (queryType === "products")
 	{
-		container.innerHTML = "<img id='loader' src='img/loader.gif' alt='Loading' width='auto';>";
+		container.innerHTML = "<img id='loader' src='/660273/img/loader.gif' alt='Loading';>";
 	}
 
-	var queryString = "db/" + query + "?" + getArgument + "=" + id;
+	if (reqMethod == "GET")	
+	{
+		fileString = "/660273/assets/db/" + phpRes;
+		if (queryType == "allCategories") { fileString += "?field=" + field + "&order=" + order + "&search=" + searchTerm; }
+		else { fileString += "?" + getArgument + "=" + getData; }
+	}
+	else
+	{
+		fileString = "/660273/assets/db/" + phpRes; 
+	}
+
+	console.log(fileString);
 	//console.log(queryString);
-	xhr.open("GET", queryString, true);
-	xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-	xhr.send();
-}
+	xhr.open(reqMethod, fileString, true);
 
-/**
-function getProductsCMS(cat) {
-	var products = document.getElementById("products");
-	var xhr = new XMLHttpRequest();
-
-	var changeListener = function() {
-		console.log(xhr.responseText);
-		if(xhr.readyState == 4 && xhr.status == 200) {
-			var result = JSON.parse(xhr.responseText);
-			products.innerHTML = "";
-			var $i = 0;
-			for(var obj in result){
-				$i++;
-				products.innerHTML += "<div class='productItem'>" +
-				"<img src='img/products/" + result[obj].photo + "' alt='picture of product'>" +
-				"<div class='itemName'>" + result[obj].name + "</div>" +
-				"<div class='itemPrice'>Price: <strong>£" + result[obj].price + "</strong></div>" +
-				"<div class='itemQuantity'><strong>" + result[obj].quantity + "</strong> in stock</div>" +
-				"<a class='viewItem' href='product.php?product=" + result[obj].id + "' id='viewItem'>View Item</a>" +
-				"<a class='addToBasket' href='#' onClick=addToBasket()>Add to Basket</a></div>" ;
-			}
-		}
+	if (reqMethod != "GET") 
+	{ 
+		if (formSubmit) { xhr.send(sendData); }
+		else { xhr.send(JSON.stringify(sendData)); }
+	}
+	else 
+	{ 
+		xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+		xhr.send();
 	}
 	
-	products.innerHTML = "<img src='img/loader.gif' alt='Loading'>";
-
-	xhr.open("POST", "incl/getProducts.php", true);
-	xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-	xhr.onreadystatechange = changeListener;
-	xhr.send("category="+cat);
 }
-*/

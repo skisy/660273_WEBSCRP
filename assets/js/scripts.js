@@ -1,4 +1,4 @@
-﻿function navResize()
+function navResize()
 {
 	var nameWidth = parseInt(document.getElementById('shop-name').offsetWidth);
 	var nav = document.getElementById("top-search");
@@ -15,9 +15,10 @@ function searchResize(offset)
 	var currentCat = document.getElementById("currentCat");
 	var search = document.getElementById("searchInput");
 	if (window.innerWidth > 1288) {	
-		offset -= 30;
+		offset -= 50;
 		search.style.width = 900 - offset - currentCat.offsetWidth + "px";
 	} else {
+		offset += 10;
 		var searchWidth = window.innerWidth - offset - currentCat.offsetWidth + "px";
 		search.style.width = searchWidth;
 	}
@@ -27,8 +28,8 @@ function showPreviousPage()
 {
 	var state = window.history.state;
 	if(state){
-		ajaxGet(state.catID, "categories", callbackCategories);
-		ajaxGet(state.catID, "products", callbackProducts);
+		ajaxHandle(state.catID, "categories", callbackCategories);
+		ajaxHandle(state.catID, "products", callbackProducts);
 		document.title = state.catName;
 	} else {
 		window.history.back();
@@ -40,8 +41,8 @@ function showHomePage() {
 	searchResize(76);
 	window.removeEventListener("load", showHomePage, false);
 	window.addEventListener('popstate', showPreviousPage, false);
-	ajaxGet(0, "categories", callbackCategories);
-	ajaxGet(0, "products", callbackProducts);
+	ajaxHandle(0, "categories", callbackCategories);
+	ajaxHandle(0, "products", callbackProducts);
 	var stateObj = {}
 	stateObj.catID = 0;
 	stateObj.catName = "Home";
@@ -50,8 +51,8 @@ function showHomePage() {
 
 function categoryNavigation(id, categoryName) {
 	document.title = categoryName;
-	ajaxGet(id, "categories", callbackCategories);
-	ajaxGet(id, "products", callbackProducts);
+	ajaxHandle(id, "categories", callbackCategories);
+	ajaxHandle(id, "products", callbackProducts);
 	var url = "category/" + categoryName.replace(/[^a-zA-Z\s]/g,"").replace(/[\s]/g,"");;
 	var stateObj = {}
 	stateObj.catID = id;
@@ -113,6 +114,19 @@ function addToBasket(result) {
 			//console.log(JSON.parse(localStorage.getItem("basket")));
 			
 		}
+
+		var container = document.getElementById("prodButtons" + result.id);
+
+		container.innerHTML = "<p class='basketConfirmation'>Added to Basket!</p>";
+
+		setTimeout(function() {
+			container.innerHTML = "<a class='viewItem' href='product.php?product=" + result.id + "' class='viewItem' draggable='false'>View Item</a>" +
+								"<a class='addToBasket' id='" + result.id + "' href='#' draggable='false' onclick=return false();>Add to Basket</a></div></div>";
+		},1000);
+
+		//"<div class='productButtons' id='prodButtons" + result[obj].id + "'>" +
+		//	"<a class='viewItem' href='product.php?product=" + result[obj].id + "' class='viewItem' draggable='false'>View Item</a>" +
+		//	"<a class='addToBasket' id='" + result[obj].id + "' href='#' draggable='false' onclick=return false();>Add to Basket</a></div></div>";
   	} else {
   		alert("No support for web storage");
   	}
@@ -135,6 +149,7 @@ function itemsInBasket() {
 }
 
 function getBasket() {
+
 	if(typeof(Storage)!=="undefined")
   	{
 		if(localStorage.getItem("basket")) {
@@ -144,68 +159,104 @@ function getBasket() {
 			return 0;
 		}
   	} else {
-  		alert("No support for web storage");
+  		alert("No support for web storage, please upgrade your browser.");
   	}
 }
 
 function displayProducts(result) {
+
 	console.log(result);
 	var dynamicContent = document.getElementById("products");
 	dynamicContent.innerHTML = "";
-	if(JSON.stringify(result) == "{}") {
+
+	if(JSON.stringify(result) == "{}") 
+	{
+
 		dynamicContent.innerHTML = "<div id='noProducts'><strong>There are no products available from this category</strong></div><a name='goBack' id='goBack'>Go Back</a>";
-	} else {
-		for(var obj in result) {
-			dynamicContent.innerHTML += "<div class='productItem' id='productItem" + result[obj].id + "' draggable='true' ondragstart=dragStartHandle(); ondragend=dragEndHandle();>" +
-			"<img src='img/products/" + result[obj].photo + "' alt='picture of product' class='productImg' draggable='false'>" +
+
+	} 
+	else 
+	{
+		for(var obj in result) 
+		{
+			dynamicContent.innerHTML += "<div tabindex=0 class='productItem' id='productItem" + result[obj].id + "' draggable='true' ondragstart=dragStartHandle(); ondragend=dragEndHandle();>" +
 			"<p class='itemName'>" + result[obj].name + "</p>" +
+			"<img src='img/products/" + result[obj].id + "/" + result[obj].photo + "' alt='picture of product' class='productImg' draggable='false'>" +
 			"<p class='itemCat'>Category: <a class='itemCatLink' id='itemCat" + result[obj].category + "' href='#' draggable='false'>" + result[obj].catName + "</a></p>" + 
 			"<p class='itemPrice'>Price: <strong>£" + result[obj].price + "</strong></p>" +
 			"<p class='itemQuantity'><strong>" + result[obj].quantity + "</strong> in stock</p>" +
+			"<div class='productButtons' id='prodButtons" + result[obj].id + "'>" +
 			"<a class='viewItem' href='product.php?product=" + result[obj].id + "' class='viewItem' draggable='false'>View Item</a>" +
-			"<a class='addToBasket' id='" + result[obj].id + "' href='#' draggable='false' onclick=return false();>Add to Basket</a></div>";
+			"<a class='addToBasket' id='" + result[obj].id + "' href='#' draggable='false' onclick=return false();>Add to Basket</a></div></div>";
 		}
 	}
 }
 
 function callbackCategories(result) {
+
 	//console.log(result);
 	var dynamicContent = document.getElementById("catNav");
 	dynamicContent.innerHTML = "";
 	var i = 0;
-	for(var obj in result) {
+
+	for(var obj in result) 
+	{
+
 		i++;
-		if (i < 8) {
+		if (i < 8) 
+		{
+
 			dynamicContent.innerHTML += "<div class='catDiv'><a class='catButton' id='cat" +
 									 result[obj].id + "' href='index.php?category=" 
 									 + result[obj].id + "'>" +	result[obj].name + "</a></div>";
+
 		}	
 	}
+
 	dynamicContent.innerHTML += "<div class='catDiv'><a id='otherCats' href='#'>All Categories</a></div>";
+
 }
 
-function populateDropdown(result) {
+function populateDropdown(result) 
+{
+
 	var dropdown = document.getElementById("catSelect");
 	dropdown.innerHTML = "<option>All</option><option selected='selected'>Current</option>";
-	for(var obj in result) {
-			dropdown.innerHTML += "<option value='" + result[obj].id + "''>" + result[obj].name + "</option>";
-		}
+
+	for(var obj in result) 
+	{
+
+		dropdown.innerHTML += "<option value='" + result[obj].id + "'>" + result[obj].name + "</option>";
+
+	}
+
 }
 
-function searching(products) {
+function searching(products) 
+{
+
 	search = document.getElementById("searchInput");
+
 	search.addEventListener("keyup", function() {
+
 		var searchStr = document.getElementById("searchInput").value.toLowerCase();
 		var selectedCat = document.getElementById("currentCat").innerHTML;
+
 		//console.log("SEARCH:" + searchStr);
 		if (selectedCat == "Current") {
+
 			for(var obj in products) {
+
 				var name = products[obj].name.toLowerCase();
 				var desc = products[obj].description.toLowerCase();
 				var catName = products[obj].catName.toLowerCase();
+
 				if (name.indexOf(searchStr) >= 0 || desc.indexOf(searchStr) >= 0 || catName.indexOf(searchStr) >= 0) {
+
 					document.getElementById("productItem" + products[obj].id).className = "productItem";
+
 				} else {
+
 					document.getElementById("productItem" + products[obj].id).className = "notDisplayed";
 
 				}
@@ -219,32 +270,42 @@ function searching(products) {
 
 function updateSelectedCat()
 {
+
 	var currentCat = document.getElementById("currentCat");
 	var select = document.getElementById("catSelect");
 	currentCat.innerHTML = select.options[select.selectedIndex].text;
 	navResize();
 	searchResize(45);
+
 }
 
 function updateBasketQuantity() {
+
 	var basketQuantity = document.getElementById("basketQuantity");
     
     while( basketQuantity.firstChild ) {
+
         basketQuantity.removeChild( basketQuantity.firstChild );
+
     }
+
     basketQuantity.appendChild( document.createTextNode(itemsInBasket()) );	
 }
 
 function dragStartHandle() {
+
 	var product = event.target;
 	event.target.className = "draggedProduct";
 	document.getElementById("dragHereBasket").className = "basketTipDisplay";
+
 }
 
 function dragEndHandle() {
+
 	event.target.className = "productItem";
 	document.getElementById("dragHereBasket").className = "notDisplayed";
 	document.getElementById("releaseHereBasket").className = "notDisplayed";
+
 }
 
 function dragOverHandle() {
@@ -252,48 +313,68 @@ function dragOverHandle() {
 }
 
 function dragLeaveHandle() {
+
 	document.getElementById("dragHereBasket").className = "basketTipDisplay";
 	document.getElementById("releaseHereBasket").className = "notDisplayed";
 	console.log("left");
+
 }
 
 function dragEnterHandle() {
+
 	console.log("entered");
 	document.getElementById("dragHereBasket").className = "notDisplayed";
 	document.getElementById("releaseHereBasket").className = "basketTipDisplay";
+
 }
 
 function addEventListeners()
 {
 	window.addEventListener("resize", navResize, false);
-	window.addEventListener("resize", function(){
-		searchResize(45)}, false);
+	window.addEventListener("resize", function(){searchResize(45)}, false);
+
 	document.querySelector('body').addEventListener('click', function(evt) {
-	  if (evt.target.tagName.toLowerCase() === 'a') {
-		evt.preventDefault();
-		var tClassName = evt.target.className;
+
+	  if ((evt.target.tagName.toLowerCase() === 'a') &&  (tClassName != "nav")) {
+
+	  	var tClassName = evt.target.className;
 		var tId = evt.target.id;
 		var targetElement = document.getElementById(tId);
-		if (tClassName === 'catButton') {
-			var id = tId.replace("cat","");
-			categoryNavigation(id, targetElement.text);
-		} else if (tId === 'otherCats') {
-			alert("IT DOESN'T WORK YET!")
-		} else if (tClassName === 'itemCatLink') {
-			var id = tId.replace("itemCat", "");
-			categoryNavigation(id, targetElement.text);
-		} else if (tId === "goBack") {
-			window.history.back();
-		} else if (tClassName == 'addToBasket') {
-			var id = tId.replace("add","");
-			ajaxGet(id, "productDetail", addToBasket);
-			var quantityDisplay = document.getElementById("basketQuantity");
-			var basketQuantity = parseInt(quantityDisplay.innerHTML);
-			quantityDisplay.innerHTML = basketQuantity + 1;
-			
-		} else {
-			//alert("Do something else");
-		}
+
+	  	if (tClassName != "nav") {
+
+	  		evt.preventDefault();
+
+	  		if (tClassName === 'catButton') {
+
+				var id = tId.replace("cat","");
+				categoryNavigation(id, targetElement.text);
+
+			} else if (tId === 'otherCats') {
+
+				alert("IT DOESN'T WORK YET!")
+
+			} else if (tClassName === 'itemCatLink') {
+
+				var id = tId.replace("itemCat", "");
+				categoryNavigation(id, targetElement.text);
+
+			} else if (tId === "goBack") {
+
+				window.history.back();
+
+			} else if (tClassName == 'addToBasket') {
+
+				var id = tId.replace("add","");
+				ajaxHandle(id, "productDetail", addToBasket);
+				var quantityDisplay = document.getElementById("basketQuantity");
+				var basketQuantity = parseInt(quantityDisplay.innerHTML);
+				quantityDisplay.innerHTML = basketQuantity + 1;
+
+			} else {
+				//alert("Do something else");
+			}
+	  	}
 	  }
 	},false);
 	
@@ -310,7 +391,7 @@ function addEventListeners()
 		dragleave - fires when dragged element leaves valid drop target
   */
 
-	document.getElementById("basketLink").addEventListener("click", function(evt){
+	document.getElementById("basketLink").addEventListener("click", function(evt) {
 		evt.preventDefault();
 		alert("Load quick basket");
 	}, false);
@@ -321,4 +402,4 @@ function addEventListeners()
 window.addEventListener("load", addEventListeners, false);
 window.addEventListener("load", showHomePage, false);
 window.addEventListener("load", function() {
-	ajaxGet(0, "categories", populateDropdown)},false);
+	ajaxHandle(0, "categories", populateDropdown)},false);
