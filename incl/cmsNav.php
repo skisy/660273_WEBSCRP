@@ -2,16 +2,16 @@
 
 	<h1>CMS</h1>
 
-	<div class='navDiv'>
+	<div class='navDiv' >
 		<a class="navButton" href='/660273/cms/'>Overview</a>
 	</div>
 
 	<div class='navDiv'>
-		<a class="navButton" href='/660273/cms/addProduct'>Add Product</a>
-	</div>	
+		<a class="navButton" href='/660273/cms/addCategory'>Add Category</a>
+	</div>
 
 	<div class='navDiv'>
-		<a class="navButton" href='/660273/cms/manageProducts'>Manage Products</a>
+		<a class="navButton" href='/660273/cms/addProduct'>Add Product</a>
 	</div>
 
 	<div class='navDiv'>
@@ -19,11 +19,11 @@
 	</div>
 
 	<div class='navDiv'>
-		<a class="navButton" href='/660273/cms/manageAttributes'>Manage Attributes</a>
+		<a class="navButton" href='/660273/cms/manageProducts'>Manage Products</a>
 	</div>
 
 	<div class='navDiv'>
-		<a class="navButton" href='/660273/cms/addCategory'>Add Category</a>
+		<a class="navButton" href='/660273/cms/manageAttributes'>Manage Attributes</a>
 	</div>
 
 	<div class='navDiv'>

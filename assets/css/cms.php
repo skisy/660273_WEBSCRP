@@ -2,24 +2,139 @@
 	header("Content-type: text/css; charset: UTF-8");
 	include ('sitePaths.php');
 	$settings = parse_ini_file(INCL_ROOT . "config.ini");
+
 ?>
 
-.parentCatField {
+#catDropSelect {
+	color:<?php echo $settings["primary-colour"]?>;
+	max-height:150px;
+}
+
+small {
+	color:<?php echo $settings["primary-colour"]?>;
+}
+
+.hint {
+	margin-left:5px;
+}
+
+.parentCat small
+{
+	margin:5px;
+	font-style:italic;
+	color: <?php echo $settings["primary-colour"]?>;
+}
+
+.cmsOverview p {
+	margin-left:20px;
+}
+
+.cmsOverview li {
+	margin: 10px 0;
+}
+
+.presets {
+	display:block;
+}
+
+.info {
+	margin-bottom:5px;
+	display:block;
+}
+
+.keyValueGroup {
+	margin-bottom:25px;
+	border-bottom:1px solid #cccccc;
+}
+
+.addMeta {
+	display:inline;
+	width: 140px;
+}
+
+.productFieldset strong {
+	font-size:.9em;
+}
+
+.productFieldset small {
+	display:block;
+	margin:5px 0 15px 0;
+	padding-bottom:10px;
+	font-size:.8em;
+	font-style:italic;
+	border-bottom:1px solid #cccccc;
+	color:<?php echo $settings["primary-colour"]?>;
+}
+
+#cmsHomeLink {
+	margin-bottom:15px;
+}
+
+#addAttributeLink {
+	margin-bottom:15px;
+}
+
+.actText {
+	pointer-events:none;	
+}
+
+#prodImgHead {
+	min-width:100px !important;
+}
+
+#prodPriceHead {
+	min-width:75px !important;
+}
+
+#prodQuantHead {
+	min-width:45px !important;
+}
+
+#prodNameHead {
+	min-width:90px !important;	
+}
+
+#prodDescHead {
+	min-width: 130px !important;
+}
+
+#prodCatHead {
+	min-width: 100px !important;
+}
+
+.clickableField {
 	cursor:pointer;
 }
 
-.delIcon {
-	margin-right: 5px;
-	vertical-align:top;
+.actionDiv {
+	display:inline-block;
+	cursor:pointer;
 }
 
-.deleteRow {
-	cursor: pointer;
-	min-width:100px !important;
+thead tr:hover {
+	background:none;
+}
+
+.actIcon {
+	margin-right: 5px;
+	vertical-align:top;
+	pointer-events:none;
+}
+
+.actionDiv {
+	margin:5px;
 }
 
 .actionHead {
 	min-width:100px !important;
+}
+
+.deleteRow {
+	margin-right: 15px;
+}
+
+.editRow:hover {
+	color:green;
 }
 
 .deleteRow:hover {
@@ -45,8 +160,7 @@ th:hover .orderIconHidden {
 }
 
 .tableField:hover {
-	color: <?php echo $settings['nav-colour'] ?>;
-	text-decoration:underline;
+	color: <?php echo $settings['primary-colour'] ?>;
 }
 
 table {
@@ -60,10 +174,10 @@ table svg {
 
 th {
 	text-align:left;
-	color: <?php echo $settings['nav-colour'] ?>;
+	color: <?php echo $settings['primary-colour'] ?>;
 	padding: 10px;
 	margin:0;
-	border-bottom:2px solid <?php echo $settings['nav-colour'] ?>;
+	border-bottom:2px solid <?php echo $settings['primary-colour'] ?>;
 	min-width:200px;
 }
 
@@ -71,6 +185,23 @@ th {
 	margin:0 !important;
 	width: 550px !important;
 	max-width:95%;
+}
+
+.topControls {
+	float:right;
+	margin: 6px 5px 5px 5px;
+}
+
+.tableImg {
+	max-width: 100px;
+	max-height: 100px;
+	border: 1px solid gray;
+	border-radius: 5px;
+	padding:2px;
+	margin-left:5px;
+	background:white;
+	display:block;
+	margin: 5px auto;
 }
 
 tr {
@@ -81,12 +212,8 @@ tr:nth-child(even) {
 	background-color: #ebebeb;
 }
 
-tr:first-child:hover {
-	background:none;
-}
-
 tr:hover {
-	background: <?php echo $settings['background-colour'] ?>;
+	background: <?php echo $settings['secondary-colour'] ?>;
 }
 
 tr:hover td {
@@ -96,20 +223,13 @@ tr:hover td {
 td {
 	padding: 10px 15px 10px 5px;
 	border-bottom: 1px solid #cccccc;
-	min-width:200px;
-	max-width:300px;
-	text-overflow:ellipsis;
-}
-
-.cms h1 {
-	padding:7px 0 !important;
-	margin-bottom:7px;
-	border-bottom: 1px solid #cccccc;	
+	max-width:200px;
 }
 
 .cmsSearch {
 	width: 250px;
 	height: 40px;
+	margin-bottom:10px;
 	vertical-align:top;
 	font-size:1em;
 }
@@ -137,14 +257,14 @@ svg {
 	transition: background 2.2s ease;
 	display:block;
 	background: rgb(250,250,250);
-	border-bottom: 1px solid <?php echo $settings['background-colour']?>;
+	border-bottom: 1px solid <?php echo $settings['secondary-colour']?>;
 	position: relative;
 	padding-right:20px;
 }
 
 .navDiv:hover {
 	transition: background 0.5s ease;
-	background: <?php echo $settings['background-colour'] ?>;
+	background: <?php echo $settings['secondary-colour'] ?>;
 }
 
 .navButton {
@@ -152,7 +272,7 @@ svg {
 	width: 100%;
 	display:block;
 	text-decoration:none;
-	color:<?php echo $settings['nav-colour']?>;
+	color:<?php echo $settings['primary-colour']?>;
 }
 
 .svgLoader {
@@ -174,7 +294,7 @@ form {
 ellipse.highlightChev {
  
 	fill:none;
-	stroke:<?php echo $settings['nav-colour'] ?>;
+	stroke:<?php echo $settings['primary-colour'] ?>;
 	stroke-width: 12;
 }
 
@@ -224,10 +344,10 @@ progress[value]::-webkit-progress-bar {
 }
 
 progress[value]::-webkit-progress-value {
-  	background:<?php echo $settings['nav-colour'] ?>;
+  	background:<?php echo $settings['primary-colour'] ?>;
 }
 
-input[type=text] {
+input[type=text], input[type=email] {
 	width:200px;
 	border: 1px solid rgb(169, 169, 169);
 	padding: 2px;
@@ -270,14 +390,19 @@ select {
 }
 
 input:focus, select:focus, textarea:focus {
-	box-shadow: 0 0 5px <?php echo $settings['nav-colour'] ?>;
-	border: 1px solid <?php echo $settings['nav-colour'] ?>;
+	box-shadow: 0 0 5px <?php echo $settings['primary-colour'] ?>;
+	border: 1px solid <?php echo $settings['primary-colour'] ?>;
+}
+
+input[type=checkbox] {
+	box-shadow: none;
+	border: none;
 }
 
 .upFile:focus {
-	box-shadow: 0 0 5px <?php echo $settings['nav-colour'] ?>;
+	box-shadow: 0 0 5px <?php echo $settings['primary-colour'] ?>;
 	padding:1px;
-	border: 1px solid <?php echo $settings['nav-colour'] ?>;
+	border: 1px solid <?php echo $settings['primary-colour'] ?>;
 }
 
 .formSubmit {
@@ -285,11 +410,11 @@ input:focus, select:focus, textarea:focus {
 	display:block;
 }
 
-.cmsSearchBtn {
+.cmsManageBtn {
 	display:inline-block;
 }
 
-.cmsSearchBtn:active {
+.cmsManageBtn:active {
 	box-shadow: inset 0 1px 4px rgba(0, 0, 0, .8);
 }
 
@@ -307,8 +432,8 @@ input:focus, select:focus, textarea:focus {
 }
 
 .error {
-	border: 1px solid red;
-	background-color: rgba(255,0,0,0.2);
+	border: 1px solid red !important;
+	background-color: rgba(255,0,0,0.2) !important;
 }
 
 .success {
@@ -344,7 +469,7 @@ form label {
 	font-weight:700;
 }
 
-.extraImages {
+.productFieldset {
 	max-width:625px;
 }
 
@@ -367,6 +492,8 @@ form label {
 	display:block;
 	border: 1px solid #cccccc;
 	border-radius:5px;
+	
+	overflow-x:scroll;
 }
 
 .aboveLabel {
@@ -376,6 +503,7 @@ form label {
 
 .catTree {
 	list-style-type:none;
+	width:1000px;
 }
 
 .catTree ul {
@@ -398,7 +526,7 @@ form label {
 .icon {
 	margin-right:10px;
 	cursor:pointer;
-	color: <?php echo $settings['nav-colour']?>;
+	color: <?php echo $settings['primary-colour']?>;
 }
 
 .catTree label {
@@ -424,12 +552,16 @@ form label {
 
 .formButton:hover {
 	border-color: #aaaaaa; 
-	background: <?php echo $settings['nav-colour'] ?>; 
+	background: <?php echo $settings['primary-colour'] ?>; 
 	color: white;
 }
 
+.formButton:hover g {
+	fill:white;
+}
+
 .formButton:active {
-	box-shadow: inset 0 1px 4px rgba(0, 0, 0, .8);
+	box-shadow: inset 0 1px 5px rgba(0, 0, 0, .8);
 }
 
 .formButton:disabled {
@@ -461,7 +593,7 @@ form label {
 
 .submitProgress {
 	height: calc(100% - 20px);
-	background: <?php echo $settings['nav-colour'] ?>;
+	background: <?php echo $settings['primary-colour'] ?>;
 	width:0;
 	padding:10px 0 ;
 	display:block;
@@ -488,24 +620,72 @@ form label {
 	margin-top:20px;
 }
 
-.extraImages {
+.productFieldset {
 	border: 1px solid #cccccc;
 	border-radius:5px;
 	margin-bottom:20px;
 }
 
-@media screen and (max-width:1288px) {
-	.cms {
-		padding-top:80px !important;
+@media screen and (max-width:800px) and (min-width:738px) {
+
+	#productTable .actionHead  {
+		opacity:0;
+		transition:all.2s;
+		min-width:0 !important;
 	}
+}
+
+@media screen and (max-width:1288px) {
 
 	.validateMsg {
 		width:95% !important;
 	}
 }
 
+@media screen and (max-width:1040px) {
+	#productTable, #productTable thead, #productTable tbody, #productTable th, #productTable td, #productTable tr { 
+		display: block; 
+	}
+
+	#productTable thead > tr { 
+		position: absolute;
+		top: -9999px;
+		left: -9999px;
+	}
+	
+	#productTable tr { 
+		border: 1px solid #ccc; 
+	}
+	
+	#productTable td { 
+		border: none;
+		border-bottom: 1px solid #eee; 
+		position: relative;
+		padding-left: 50%; 
+		min-height:20px;
+	}
+	
+	#productTable td:before { 
+		color:#555555;
+		position: absolute;
+		top: 9px;
+		left: 6px;
+		width: 45%; 
+		padding-right: 10px; 
+		white-space: nowrap;
+	}
+
+	.prodField:nth-of-type(2):before { content: "Name:"; }
+	.prodField:nth-of-type(3):before { content: "Description:"; }
+	.prodField:nth-of-type(4):before { content: "Price (£):"; }
+	.prodField:nth-of-type(5):before { content: "Qty:"; }
+	.prodField:nth-of-type(6):before { content: "Category:"; }
+	.prodField:nth-of-type(7):before { content: "Action:"; }
+
+}
+
 @media screen and (max-width:700px) and (min-width:401px) {
-	.extraImages {
+	.productFieldset {
 		width:90%;
 		min-width: 0;
 	}
@@ -528,27 +708,29 @@ form label {
 	}
 }
 
-@media screen and (max-width:700px) {
-	table, thead, tbody, th, td, tr { 
+@media screen and (max-width:750px) {
+	.cms table, .cms thead, .cms tbody, .cms th, .cms td, .cms tr { 
 		display: block; 
 	}
 
-	thead tr { 
+	.cms thead > tr { 
 		position: absolute;
 		top: -9999px;
 		left: -9999px;
 	}
 	
-	tr { border: 1px solid #ccc; }
+	.cms tr { 
+		border: 1px solid #ccc; 
+	}
 	
-	td { 
+	.cms td { 
 		border: none;
 		border-bottom: 1px solid #eee; 
 		position: relative;
 		padding-left: 50%; 
 	}
 	
-	td:before { 
+	.cms td:before { 
 		color:#555555;
 		position: absolute;
 		top: 9px;
@@ -558,24 +740,30 @@ form label {
 		white-space: nowrap;
 	}
 
-	tr:first-child:hover {
-		background:<?php echo $settings['background-colour']?> !important;
-	}
+	.catField:nth-of-type(1):before { content: "Category:"; }
+	.catField:nth-of-type(2):before { content: "Parent Category:"; }
+	.catField:nth-of-type(3):before { content: "Action:"; }	
 
-	
-	/*
-	Label the data
-	*/
-	td:nth-of-type(1):before { content: "Category:"; }
-	td:nth-of-type(2):before { content: "Parent Category:"; }
-	td:nth-of-type(3):before { content: "Action:"; }
+	.attrField:nth-of-type(1):before { content: "Name:"; }
+	.attrField:nth-of-type(2):before { content: "Type:"; }
+	.attrField:nth-of-type(3):before { content: "Action:"; }
+
+	.disField:nth-of-type(1):before { content: "Order Ref:"; }
+	.disField:nth-of-type(2):before { content: "Total Income:"; }
+	.disField:nth-of-type(3):before { content: "Date Made:"; }	
+	.devField:nth-of-type(4):before { content: "Date Dispatched:"; }	
+
+	.orderProductField:nth-of-type(1):before { content: "Item:"; }
+	.orderProductField:nth-of-type(2):before { content: "Price:"; }
+	.orderProductField:nth-of-type(3):before { content: "Quantity:"; }	
+
 	
 }
 
 
 @media screen and (max-width:400px) {
 	
-	#addItemPrice, input[type=text], input[type=number] {
+	#addItemPrice, input[type=text], input[type=number], input[type=email] {
 		width:98%;
 		height:30px;
 	}
@@ -599,7 +787,7 @@ form label {
 		width:96%;
 	}
 
-	.extraImages {
+	.productFieldset {
 		width:90%;
 		min-width:246px;
 	}

@@ -1,12 +1,15 @@
 <?php 	
 	include ("sitePaths.php");
 	$settings = parse_ini_file(INCL_ROOT . "config.ini");
+	include (ASSETS_ROOT . "db" . DIRECTORY_SEPARATOR . "test_conn.php");
 
 	include (INCL_ROOT . 'header.php');
 	include (INCL_ROOT . 'cmsNav.php');
 ?>
 <div class="right-content">
-	<h1>Add Category</h1>
+	<a href="../manageCategories"><div title="Manage Categories" id="manCatBtn" class="formButton cmsManageBtn topControls"><?php include (IMG_ROOT . 'svg/manage.svg')?></div></a>
+	<h1 class="inlineTitle">Add Category</h1>
+	
 	<div class="hideStatus" id="submitResult"><div class="submitProgress" id="submitProgress"><p class="hideStatus" id="completeMsg"></p></div></div>
 	<form id="addCategory" class="formContainer">
 

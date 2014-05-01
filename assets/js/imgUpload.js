@@ -17,15 +17,15 @@ function imageUpload(id)
 	/*var failedUpDiv = document.getElementById("upFail");
 	console.log(failedUpDiv != null);*/
 
-	var imgContainer = document.createElement("DIV");
-	var upImgDiv = document.createElement("DIV");
-	var upImg = document.createElement("IMG");
-	var statusDiv = document.createElement("DIV");
-	var uploadImage = "";
+	var imgContainer = document.createElement("div");
+	var upImgDiv = document.createElement("div");
+	var upImg = document.createElement("img");
+	var statusDiv = document.createElement("div");
+	var uploadedImage = "";
 	var progressBar = "";
 	var progressWrapper = "";
-	var statusText = document.createElement("P");
-	var loadObj = document.createElement("OBJECT");
+	var statusText = document.createElement("p");
+	var loadObj = document.createElement("object");
 
 	if (id == "imgFile")
 	{
@@ -42,7 +42,7 @@ function imageUpload(id)
 		progressWrapper = document.getElementById("exProgressWrap" + num);
 	}
 
-	function loadStartHandle(evt) 
+	function loadStartHandle() 
 	{
 		document.getElementById("formSave").disabled = true;
 		document.getElementById(id).disabled = true;
@@ -83,7 +83,7 @@ function imageUpload(id)
 		statusText.innerHTML = "";
 	}
 
-	function contentLoaded(evt) 
+	function contentLoaded() 
 	{
 		if (this.status == 200) {
 
@@ -112,13 +112,13 @@ function imageUpload(id)
 					break;
 				default:
 				//console.log(tempResult);
-					if (fileExists(input) == false)
+					if (fileExists(input) === false)
 					{
 						var result = JSON.parse(xhr.response);
 						upImg.src = result.dataUrl;
 						upImg.alt = "Uploaded Picture";
 						imgContainer.id = "upSuccess";
-						statusText.innerHTML = "Successfully Uploaded!"
+						statusText.innerHTML = "Successfully Uploaded!";
 						upResult(true);
 					}
 					else
@@ -143,9 +143,9 @@ function imageUpload(id)
 		var exists = false;
 		var i = 0;
 
-		while (exists == false && i < fileElements.length)
+		while (exists === false && i < fileElements.length)
 		{
-			if (!(fileElements[i].id == fileInput.id))
+			if (fileElements[i].id !== fileInput.id)
 			{
 				exists = (fileElements[i].value == fileInput.value);
 			}
@@ -209,7 +209,7 @@ function imageUpload(id)
 		}
 	}
 
-	function uploadFail(evt) {
+	function uploadFail() {
 		console.log("Content load failed, please try again.");
 	}
 	

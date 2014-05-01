@@ -1,40 +1,53 @@
 <?php
 
-	//IT WORKS - WRITE AJAX FOR IT NOW - xhr.open("PATCH", "db_update_category.php")
-	//xhr.send("data=" + JSON.stringify(jsonData))
 	header("Content-Type: application/json");
 
 	include('db_connect.php');
 
-	$putdata = fopen("php://input", "r");
+	$valid = true;
 
-	$data = json_decode(fread($putdata, 1024), TRUE);
+	$handle = fopen("php://input", "rb");
+
+	$data = stream_get_contents($handle);
+
+	$data = json_decode($data, TRUE);
 
 	foreach ($data as $key => $value)
 	{
 		if ($key == "id") { $id = $value; }
 		else 
 		{
-			$field = $key;
-			$val = $value;
+			$field = $conn->real_escape_string(sanitise_input($key));
+			$val = $conn->real_escape_string(sanitise_input($value));
 		}
 	}
 
 	if(! $stmt = $conn->prepare("UPDATE category SET $field=? WHERE cat_id=?")) 
 	{
-		echo "ERROR:" . $conn->error;
+		$valid = false;
 		die();		
 	} 
 	else 
 	{	
-		if ($field == "parent_id") { $stmt->bind_param('ii', $value, $id); }	
-		else if ($field == "cat_name") { $stmt->bind_param('si', $value, $id); }	
+		if ($field == "parent_id") { $stmt->bind_param('ii', $val, $id); }	
+		else if ($field == "cat_name") { $stmt->bind_param('si', $val, $id); }	
 	}
 
-	if(!$stmt->execute()) {	die("Could not retrieve products"); }
+	if(!$stmt->execute()) 
+	{	
+		$valid = false;
+		die("Could not update category"); 
+	}
 
 	fclose($putdata);
 
-	echo '{"success":"true"}';
+	if ($valid)
+	{
+		echo '{"result":"success"}';
+	}
+	else
+	{
+		echo '{"result":"failed"}';
+	}
 
 ?>

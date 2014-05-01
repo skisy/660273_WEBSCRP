@@ -4,6 +4,69 @@
 	$settings = parse_ini_file(INCL_ROOT . "config.ini");
 ?>
 
+.summaryDiv {
+	margin-bottom:5px;
+}
+
+.viewLink {
+	text-decoration:none;
+	color:<?php echo $settings["primary-colour"]?>;
+}
+
+.viewLink:hover {
+	text-decoration:underline;
+}
+
+#adminOverviewText li {
+	margin:10px 0;
+}
+
+.secondHeading {
+	margin-top: 50px;
+}
+
+.noLink {
+	pointer-events:none;	
+}
+
+.tableLink {
+	color: <?php echo $settings["primary-colour"]?>;
+	cursor:pointer;
+}
+
+.tableLink:hover {
+	color: <?php echo $settings["primary-colour"]?>;
+	text-decoration:underline;
+}
+
+thead tr td {
+	border-bottom:2px solid <?php echo $settings["primary-colour"]?>;
+}
+
+#popularProds {
+	font-size:.9em;
+}
+
+.adminOverview p {
+	margin-left:20px;
+}
+
+.important {
+	font-weight:bold;
+	color:#900000;
+	margin-left:10px;
+}
+
+.siteSettings fieldset {
+	margin-bottom:20px;
+	border:1px solid #cccccc;
+	border-radius:5px;
+}
+
+.siteSettings h1 {
+	font-size:1.2em;
+}
+
 #admin-nav {
 	font-family: Arial;
 	margin-right: 20px;
@@ -17,32 +80,7 @@
 	margin-left: 20px;
 }
 
-#site-settings {
-	margin: 16px;
-	width: 400px;
-}
-
-#site-settings h1 {
-	margin: .6em 0 .4em 0;
-	padding: 0;
-}
-
-#site-settings label {
-	margin-left: 2em;
-	width: 150px;
-	display: inline-block;
-}
-
-#site-settings span {
-	display: block;
-	margin-bottom: 0.5em;
-}
-
-#site-settings input, #site-settings select {
-	width:15em;
-}
-
-.theme-picker  option {
+.theme-picker option {
 	font-weight:500;
 }
 
@@ -94,9 +132,13 @@
 	background: rgb(232, 92, 128);
 }
 
-#submit-button {
+input[type=submit] {
 	float:right;
 	margin: .5em 1em .5em 0;
+	padding:20px;
+	width:150px;
+	color:<?php echo $settings["primary-colour"]?>;
+	cursor:pointer;
 }
 
 @media screen and (max-width:400px) {
@@ -105,5 +147,3 @@
 		padding:0;
 	}
 }
-
-	
